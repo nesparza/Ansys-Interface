@@ -16,9 +16,12 @@ angle = (45,30,20,10)
 
 for gamma in angle:
     myFileName = baseFileName % (depth*1e6, gamma)
-    myCommands = commandSyntax % (depth,-1*depth/tan(radians(gamma)))
+    xDist = depth/tan(radians(gamma))
+    myCommands = commandSyntax % (xDist,-1*depth)
     
     fileH = open(myFileName, 'w')
+    newTitle = "/title, T15P60 %03dum Depth %02dLoad Angle\n" % (depth*1e6,gamma)
+    fileH.write(newTitle)
     fileH.write(myCommands)
     fileH.close()
     
