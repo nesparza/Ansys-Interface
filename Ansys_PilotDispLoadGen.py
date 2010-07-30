@@ -12,7 +12,7 @@ from math import tan,radians
 baseFileName = "pilotLoading_%03dum_Depth_%02dAngle.txt"
 commandSyntax = "D,pilot,ux,%f\nD,pilot,uy,%f"
 depth = 40e-6
-angle = (45,30,20,10)
+angle = (40,)
 
 for gamma in angle:
     myFileName = baseFileName % (depth*1e6, gamma)
