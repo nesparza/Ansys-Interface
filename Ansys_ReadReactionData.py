@@ -8,7 +8,7 @@ Ansys Reaction Force data reader
 # importing function section
 import numpy as np			#this loads the numpy module as np
 from os.path import splitext
-#import matplotlib.pyplot as mp 
+import matplotlib.pyplot as mp 
 
 import Tkinter
 from tkFileDialog import askopenfilename
@@ -16,13 +16,37 @@ from tkFileDialog import askopenfilename
 #from fnmatch import fnmatch
 
 # Begin some function definitions
+def orgData(dataArray, headerInfo):
+    keys = ['TIME','UX','UY','UZ','FX','FY','FZ']
+    dataSet = {}
+    for key in keys:
+        for i,str in enumerate(headerInfo):
+            if not (str.find(key) < 0):
+                dataSet[key] = dataArray[:,i]
+    
+    return dataSet
+    
+    
 def plotForceDisp(data):
+    mp.figure()
+    mp.plot(data['UX'],data['FX'],'r-',label = 'shear')
+    mp.plot(data['UY'],-1*data['FY'],'b-',label = 'normal')
+    mp.title('Force Displacement Curves')
+    mp.legend()
     print 'plot force displacement'
 
 def plotForceSpace(data):
+    mp.figure()
+    mp.plot(data['FX'],-1*data['FY'],'r-')
+    mp.title('Force Space for loading')
     print 'plot force space data'
     
 def plotTimeForce(data):
+    mp.figure()
+    mp.plot(data['TIME'],data['FX'],'r-',label = 'shear')
+    mp.plot(data['TIME'],-1*data['FY'],'b-',label = 'normal')
+    mp.title('Force Displacement Curves')
+    mp.legend()
     print 'plot time history'    
 
 def parseFile(inTxt,ext):
@@ -79,5 +103,11 @@ try:
     rawTxt = fHandle.readlines()
     ext = splitext(filename)[-1]
     colStr,dataArray = parseFile(rawTxt,ext)
+    data = orgData(dataArray,colStr)
+    plotForceDisp(data)
+    plotForceSpace(data)
+    plotTimeForce(data)
+    mp.show()
+    
 except:
     print 'No File Provided'
