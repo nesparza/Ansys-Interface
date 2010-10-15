@@ -10,6 +10,8 @@ new tension elements
 # import modules
 
 from numpy import *			#this loads the numpy module
+import sys
+from os.path import dirname,join
 # these modules assist creation of graphical user file dialog
 import Tkinter
 from tkFileDialog import askopenfilename
@@ -35,19 +37,35 @@ filename = askopenfilename(filetypes=[('Text File','*.txt')],
 title='Node Listing Text File',parent = root)
 root.destroy()	# window cleanup
 
+debug = 0
+
 # Load file and read in lines
 try:
     fHandle = open(filename)
     rawTxt = fHandle.readlines()
     nodeList = vstack(importTxtData(rawTxt))
-    print nodeList
-    
-    # Lets do some crazy stuff
-    print 'Crazy Stuff'
-    newElemNodes = nodeList[0:-1:2]
-    # Then loop through and pair the nodes 
-    # Define the Element using node pair
-    # write out file with commands to create elements from node pairs    
+    if debug:
+        print nodeList
+    fHandle.close()    
     
 except:
-    print 'No File Provided'
+    print 'No File Provided ', sys.exc_info()[0]
+
+
+# Lets do some crazy stuff
+print 'Crazy Stuff'
+newElemNodes = nodeList[0::2] #subselect everyother node
+
+# open file to output commands
+newFile = join(dirname(filename),'BottomElementCreation.txt')
+fHandle = open(newFile,'w')
+# Then loop through and pair the nodes 
+i = 0
+myLine = ''
+while i < (len(newElemNodes)-1):
+    # Define the Element using node pair
+    myLine = 'E,%d,%d\n' % (newElemNodes[i],newElemNodes[i+1])
+    i=i+1
+    # write out file with commands to create elements from node pairs
+    fHandle.write(myLine)
+fHandle.close() # File clean up
