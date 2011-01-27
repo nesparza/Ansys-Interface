@@ -54,7 +54,8 @@ except:
 
 # Lets do some crazy stuff
 print 'Crazy Stuff'
-newElemNodes = nodeList[0::2] #subselect everyother node
+#newElemNodes = nodeList[0::2] #subselect everyother node
+newElemNodes = nodeList #select all nodes
 
 # open file to output commands
 newFile = join(dirname(filename),'BottomElementCreation.txt')
